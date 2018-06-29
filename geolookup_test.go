@@ -16,19 +16,21 @@ func TestCityLookup(t *testing.T) {
 	var rt http.RoundTripper = &http.Transport{}
 	city, _, err := LookupIP("198.199.72.101", rt)
 	if assert.NoError(t, err) {
-		assert.Equal(t, "New York", city.City.Names["en"])
+		assert.Equal(t, "North Bergen", city.City.Names["en"])
 
 	}
 
 	// Now test with direct domain fronting.
-	fronted.ConfigureForTest(t)
-	rt = fronted.NewDirect(30 * time.Second)
 	cloudfrontEndpoint := `http://d3u5fqukq7qrhd.cloudfront.net/lookup/%v`
-
+	fronted.ConfigureForTest(t)
+	rt, ok := fronted.NewDirect(30 * time.Second)
+	if !assert.True(t, ok, "failed to create fronted RoundTripper") {
+		return
+	}
 	log.Debugf("Looking up IP with CloudFront")
 	city, _, err = LookupIPWithEndpoint(cloudfrontEndpoint, "198.199.72.101", rt)
 	if assert.NoError(t, err) {
-		assert.Equal(t, "New York", city.City.Names["en"])
+		assert.Equal(t, "North Bergen", city.City.Names["en"])
 	}
 }
 

@@ -13,9 +13,6 @@ const (
 	// The CloudFlare endpoint can only be hit via chained proxies because domain
 	// fronting no longer works there.
 	cloudflareEndpoint = `http://geo.getiantem.org/lookup/%s`
-
-	// The CloudFront endpoint is used for "direct" domain fronted requests.
-	cloudfrontEndpoint = `http://d3u5fqukq7qrhd.cloudfront.net/lookup/%s`
 )
 
 var (
@@ -118,10 +115,7 @@ func LookupIPWithEndpoint(endpoint string, ipAddr string, rt http.RoundTripper) 
 		return nil, "", fmt.Errorf("Could not create request: %q", err)
 	}
 
-	frontedUrl := fmt.Sprintf(cloudfrontEndpoint, ipAddr)
-
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Lantern-Fronted-URL", frontedUrl)
 	log.Debugf("Fetching ip...")
 	if resp, err = rt.RoundTrip(req); err != nil {
 		return nil, "", fmt.Errorf("Could not get response from server: %q", err)
