@@ -27,7 +27,7 @@ func TestCityLookup(t *testing.T) {
 	if !assert.True(t, ok, "failed to create fronted RoundTripper") {
 		return
 	}
-	log.Debugf("Looking up IP with CloudFront")
+	log.Infof("Looking up IP with CloudFront")
 	city, _, err = LookupIPWithEndpoint(cloudfrontEndpoint, "198.199.72.101", rt)
 	if assert.NoError(t, err) {
 		assert.Equal(t, "North Bergen", city.City.Names["en"])

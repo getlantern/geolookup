@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/getlantern/golog"
+	"github.com/getlantern/zaplog"
 )
 
 const (
@@ -16,7 +16,7 @@ const (
 )
 
 var (
-	log = golog.LoggerFor("geolookup")
+	log = zaplog.LoggerFor("geolookup")
 )
 
 // The City structure corresponds to the data in the GeoIP2/GeoLite2 City
@@ -116,13 +116,13 @@ func LookupIPWithEndpoint(endpoint string, ipAddr string, rt http.RoundTripper) 
 	}
 
 	req.Header.Set("Accept", "application/json")
-	log.Debugf("Fetching ip...")
+	log.Infof("Fetching ip...")
 	if resp, err = rt.RoundTrip(req); err != nil {
 		return nil, "", fmt.Errorf("Could not get response from server: %q", err)
 	}
 	defer func() {
 		if err := resp.Body.Close(); err != nil {
-			log.Debugf("Unable to close reponse body: %v", err)
+			log.Infof("Unable to close reponse body: %v", err)
 		}
 	}()
 
@@ -139,6 +139,6 @@ func LookupIPWithEndpoint(endpoint string, ipAddr string, rt http.RoundTripper) 
 		return nil, ip, err
 	}
 
-	log.Debugf("Successfully looked up IP '%v' and country '%v'", ip, city.Country.IsoCode)
+	log.Infof("Successfully looked up IP '%v' and country '%v'", ip, city.Country.IsoCode)
 	return city, ip, nil
 }
