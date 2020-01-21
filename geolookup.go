@@ -139,6 +139,6 @@ func LookupIPWithEndpoint(endpoint string, ipAddr string, rt http.RoundTripper) 
 		return nil, ip, err
 	}
 
-	log.Debugf("Successfully looked up IP '%v' and country '%v'", ip, city.Country.IsoCode)
+	log.Tracef("Successfully looked up IP '%v' and country '%v'", ip, city.Country.IsoCode)
 	return city, ip, nil
 }
